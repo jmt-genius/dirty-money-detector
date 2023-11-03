@@ -83,7 +83,7 @@ with header_container:
     )
 
 # Display an image below the header
-st.image("./Frame 6.png", use_column_width=True)
+st.image("web/Frame 2.png", use_column_width=True)
 
 
 
