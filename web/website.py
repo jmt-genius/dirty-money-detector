@@ -69,11 +69,11 @@ with header_container:
         button3 = st.button("ABOUT")
 
     if button1:
-        subprocess.run(["streamlit", "run", "home.py"])
+        subprocess.run(["streamlit", "run", "web/home.py"])
     if button2:
-        subprocess.run(["streamlit", "run", "detector.py"])
+        subprocess.run(["streamlit", "run", "web/detector.py"])
     if button3:
-        subprocess.run(["streamlit", "run", "about.py"])
+        subprocess.run(["streamlit", "run", "web/about.py"])
 
     st.markdown(
         '<ul class="nav-links">'
