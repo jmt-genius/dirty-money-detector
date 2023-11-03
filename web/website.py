@@ -87,9 +87,3 @@ st.image("web/Frame 12.png", use_column_width=True)
 
 
 
-# Input text box with custom style
-wallet_address = st.text_input("Wallet Address", key="wallet_input", value="")
-
-
-if wallet_address:
-    st.write(f"Entered Wallet Address: {wallet_address}")
