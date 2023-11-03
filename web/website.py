@@ -60,7 +60,7 @@ with header_container:
 
 # Add a button to the row
     with col1:
-        st.image("./Frame 2.png", use_column_width=169.87)
+        st.image("web/Frame 2.png", use_column_width=169.87)
     with col2:
         button1 = st.button("HOME")
     with col3:
@@ -83,7 +83,7 @@ with header_container:
     )
 
 # Display an image below the header
-st.image("web/Frame 2.png", use_column_width=True)
+st.image("web/Frame 6.png", use_column_width=True)
 
 
 
