@@ -7,7 +7,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 from dash import Input, Output
 
-df=pd.read_csv("./dataset.csv")
+df=pd.read_csv("web/dataset.csv")
 df.drop(df.columns[df.columns.str.contains('unnamed',case = False)],axis = 1, inplace = True)
 df2=df[['Address', 'Sent tnx','Received Tnx','Number of Created Contracts','total Ether sent','total ether received','total ether balance','FLAG']]
 
@@ -88,7 +88,7 @@ with header_container:
         button1 = st.button("../")
 
     if button1:
-        subprocess.run(["streamlit", "run", "home.py"])
+        subprocess.run(["streamlit", "run", "web/home.py"])
     st.markdown(
         '<ul class="nav-links">'
   
