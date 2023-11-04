@@ -77,7 +77,7 @@ header_container.markdown(
     """,
     unsafe_allow_html=True,
 )
-with open(r'C:\Users\Girish\.vscode\programs\reva\dirty-moni-detector\src\bad.json') as f:
+with open(r'web\bad.json') as f:
             bad_ids = json.load(f)['bad']
 #
 def hash_wallet(wallet_id):
@@ -147,7 +147,7 @@ elif page == "Detector":
     #         df1.drop(['Address'], axis=1, inplace=True)
     #     scaler = StandardScaler()
     #     df_scaled = scaler.fit_transform(df1)
-    #     loaded_model = load_model(r'C:\Users\Girish\.vscode\programs\reva\DMD.h5')
+    #     loaded_model = load_model(r'web\DMD.h5')
     #     predictions = loaded_model.predict(df_scaled)
     #     binary_predictions = (predictions >= 0.5).astype(int)
     #     percentage=detect.detect(wallet)#accuracy_score([1, 0], binary_predictions) # You can change this percentage value
