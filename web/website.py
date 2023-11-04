@@ -78,7 +78,7 @@ header_container.markdown(
     """,
     unsafe_allow_html=True,
 )
-with open(r'C:\Users\Girish\.vscode\programs\reva\dirty-moni-detector\src\bad.json') as f:
+with open(r'web/bad.json') as f:
             bad_ids = json.load(f)['bad']
 #
 def hash_wallet(wallet_id):
