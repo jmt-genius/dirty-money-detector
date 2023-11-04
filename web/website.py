@@ -77,7 +77,7 @@ header_container.markdown(
     """,
     unsafe_allow_html=True,
 )
-with open(r'web\bad.json') as f:
+with open(r'jmt-genius/dirty-money-detector/web/bad.json') as f:
             bad_ids = json.load(f)['bad']
 #
 def hash_wallet(wallet_id):
