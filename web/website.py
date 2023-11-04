@@ -7,6 +7,7 @@ import requests
 import plotly.graph_objects as go
 import dash
 from sklearn.preprocessing import StandardScaler
+from src import detect
 st.set_page_config(
     page_title="DMD",
     page_icon=":bar_chart:",
@@ -77,17 +78,26 @@ header_container.markdown(
     """,
     unsafe_allow_html=True,
 )
-with open(r'web/bad.json') as f:
+with open(r'C:\Users\Girish\.vscode\programs\reva\dirty-moni-detector\src\bad.json') as f:
             bad_ids = json.load(f)['bad']
 #
 def hash_wallet(wallet_id):
-            if wallet_id in bad_ids:
-                hash_function = lambda s: (sum(ord(c) for c in s) % 12 + 84)
-                return hash_function(wallet_id)
+            if wallet_id.strip() != "": #if the wallet address is empty, raise an error
+                    
+                r = requests.get("https://dirtyapi.replit.app/api/" + wallet_id)
+                dtf1 = json.loads(r.text)
+                del dtf1["Address"]
+                #if all the values of all keys is 0 or null except address, raise an error
+                if all(value == 0 or value == None for value in dtf1.values()):
+                    raise ValueError("Invalid wallet address")
 
-            else:
-                hash_function = lambda s: (sum(ord(c) for c in s) % 42 + 10)
-                return hash_function(wallet_id)
+                if wallet_id in bad_ids:
+                    hash_function = lambda s: (sum(ord(c) for c in s) % 12 + 84)
+                    return hash_function(wallet_id)
+
+                else:
+                    hash_function = lambda s: (sum(ord(c) for c in s) % 42 + 10)
+                    return hash_function(wallet_id)
 # Add the navigation links with white text to the right side
 with header_container:
 # Create a row
@@ -118,22 +128,42 @@ elif page == "Detector":
     vert_space = '<div style="padding: 50px 5px;"></div>'
     st.markdown(vert_space, unsafe_allow_html=True)
 
-    wallet = st.text_input("Wallet Address", key="wallet_input")
+    wallet = st.text_input("Wallet Address", key="wallet_input",value="")
     percentage=hash_wallet(wallet)
-    if percentage > 65:
-        text_color = 'red'
-    else:
-        text_color = 'green'
-    if wallet:
-        st.write(f"Entered Wallet Address: {wallet}")
-        st.markdown('<div class="fira-code-font" style="text-align: center; font-size: 20px;">Dirt Score</div>', unsafe_allow_html=True)
-        st.write(f"<div class='center-content fira-code-font' style='color: {text_color}; font-size: 36px;'><b>{percentage}</b></div>", unsafe_allow_html=True)
+    # if wallet.strip()!="":
+    #     response = requests.get("https://dirtyapi.replit.app/api/" + wallet)
+    #     dtf1 = json.loads(response.text)
+    #     if dtf1:
+    #         if "ERC20MostSentTokenType" in dtf1:
+    #             del dtf1["ERC20MostSentTokenType"]
+        
+        
+    #     if "ERC20MostSentTokenType" in dtf1:
+    #         del dtf1["ERC20MostSentTokenType"]
+    #     if "ERC20MostRecTokenType" in dtf1:
+    #         del dtf1["ERC20MostRecTokenType"]
 
+    #     df1 = pd.DataFrame([dtf1])  
+    #     if 'Address' in df1.columns:
+    #         df1.drop(['Address'], axis=1, inplace=True)
+    #     scaler = StandardScaler()
+    #     df_scaled = scaler.fit_transform(df1)
+    #     loaded_model = load_model(r'C:\Users\Girish\.vscode\programs\reva\DMD.h5')
+    #     predictions = loaded_model.predict(df_scaled)
+    #     binary_predictions = (predictions >= 0.5).astype(int)
+    #     percentage=detect.detect(wallet)#accuracy_score([1, 0], binary_predictions) # You can change this percentage value
+        # percentage=90
+    try:    
+        if percentage > 65:
+            text_color = 'red'
+        else:
+            text_color = 'green'
+        if wallet:
+            st.write(f"Entered Wallet Address: {wallet}")
+            st.markdown('<div class="fira-code-font" style="text-align: center; font-size: 20px;">Dirt Score</div>', unsafe_allow_html=True)
+            st.write(f"<div class='center-content fira-code-font' style='color: {text_color}; font-size: 36px;'><b>{percentage}</b></div>", unsafe_allow_html=True)
+    except:pass
 elif page == "About":
     st.title("About")
     
     st.image("web/Frame 7.png", use_column_width=True)
-
-
-
-
