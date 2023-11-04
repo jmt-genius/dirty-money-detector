@@ -7,7 +7,6 @@ import requests
 import plotly.graph_objects as go
 import dash
 from sklearn.preprocessing import StandardScaler
-from src import detect
 st.set_page_config(
     page_title="DMD",
     page_icon=":bar_chart:",
