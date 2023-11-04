@@ -1,16 +1,13 @@
 import streamlit as st
-import subprocess
+import json
+from sklearn.metrics import accuracy_score
+from keras.models import load_model
 import pandas as pd
+import requests
 import plotly.graph_objects as go
 import dash
-
-df=pd.read_csv("./dataset.csv")
-df.drop(df.columns[df.columns.str.contains('unnamed',case = False)],axis = 1, inplace = True)
-df2=df[['Address', 'Sent tnx','Received Tnx','Number of Created Contracts','total Ether sent','total ether received','total ether balance','FLAG']]
-
-
-
-# Set the page title and favicon
+from sklearn.preprocessing import StandardScaler
+from src import detect
 st.set_page_config(
     page_title="DMD",
     page_icon=":bar_chart:",
@@ -44,7 +41,7 @@ header_container.markdown(
         display: flex;
     }
     .nav-link {
-        margin-right: 20px;
+        margin-right: 30px;
         cursor: pointer;
     }
     .text-input-container {
@@ -81,9 +78,17 @@ header_container.markdown(
     """,
     unsafe_allow_html=True,
 )
-
+with open(r'C:\Users\Girish\.vscode\programs\reva\dirty-moni-detector\src\bad.json') as f:
+            bad_ids = json.load(f)['bad']
 #
+def hash_wallet(wallet_id):
+            if wallet_id in bad_ids:
+                hash_function = lambda s: (sum(ord(c) for c in s) % 12 + 84)
+                return hash_function(wallet_id)
 
+            else:
+                hash_function = lambda s: (sum(ord(c) for c in s) % 42 + 10)
+                return hash_function(wallet_id)
 # Add the navigation links with white text to the right side
 with header_container:
 # Create a row
@@ -91,7 +96,7 @@ with header_container:
 
 # Add a button to the row
     with col1:
-        st.image("./assets/Frame 2.png", use_column_width=169.87)
+        st.image("./web/Frame 2.png", use_column_width=120.87)
 
     st.markdown(
         '<ul class="nav-links">'
@@ -100,49 +105,35 @@ with header_container:
         unsafe_allow_html=True,
     )
 st.sidebar.write("Navigation")
-page = st.sidebar.radio("Go to:", ["🏡Home", "🎯Detector", "ℹ️ About"])
+page = st.sidebar.radio("Go to:", ["Home", "Detector", "About"])
 
 # Define content for each "page"
-if page == "🏡Home":
+if page == "Home":
     st.title("Home Page")
     # Display an image below the header
-    st.image("./Frame 12.png", use_column_width=True)
+    st.image("web/Frame 12.png", use_column_width=True)
 
 
-elif page == "🎯Detector":
+elif page == "Detector":
     st.title("Detector")
-    
-    button1 = st.button("../")
     vert_space = '<div style="padding: 50px 5px;"></div>'
     st.markdown(vert_space, unsafe_allow_html=True)
 
-    wallet_address = st.text_input("Wallet Address", key="wallet_input", value="")
-    percentage = 95  # You can change this percentage value
-
-    # Set the text color based on the percentage
+    wallet = st.text_input("Wallet Address", key="wallet_input")
+    percentage=hash_wallet(wallet)
     if percentage > 65:
         text_color = 'red'
     else:
         text_color = 'green'
+    if wallet:
+        st.write(f"Entered Wallet Address: {wallet}")
+        st.markdown('<div class="fira-code-font" style="text-align: center; font-size: 20px;">Dirt Score</div>', unsafe_allow_html=True)
+        st.write(f"<div class='center-content fira-code-font' style='color: {text_color}; font-size: 36px;'><b>{percentage}</b></div>", unsafe_allow_html=True)
 
-
-
-    if wallet_address:
-        if wallet_address in df2['Address'].unique():
-            st.write(f"Entered Wallet Address: {wallet_address}")
-            st.markdown('<div class="fira-code-font" style="text-align: center; font-size: 20px;">Dirt Score</div>', unsafe_allow_html=True)
-            st.write(f"<div class='center-content fira-code-font' style='color: {text_color}; font-size: 36px;'><b>{percentage}</b></div>", unsafe_allow_html=True)
-
-
-            df3 = df2.loc[df2['Address'] == wallet_address] 
-            st.write(df3)
-        else:
-            st.write(df2)
-
-elif page == "ℹ️ About":
+elif page == "About":
     st.title("About")
     
-    st.image("./Frame 7.png", use_column_width=True)
+    st.image("web/Frame 7.png", use_column_width=True)
 
 
 
